@@ -1,34 +1,18 @@
-# CITATION.cff - Zenodo 确权文件
-# 文档规范: https://citation-file-format.github.io/
-
-cff-version: 1.1.0
+cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-authors:
-  - family-names: 郑
-    given-names: 奕廷
-    alias: 望易
-    email: wayne777@agent.qq.com
-
-title: "P19 域外势能相变引擎 (P19 Exogenous Potential Phase Transition Engine)"
+title: "P19 Exogenous Potential Phase Transition Engine"
 type: software
+authors:
+  - family-names: Zheng
+    given-names: Yiting
+    alias: WangYi
+    email: wayne777@agent.qq.com
 version: 0.1.0
-date-released: "2026-10-12"
+date-released: 2026-10-12
 license: Apache-2.0
 repository-code: "https://github.com/Yi-Ting-zheng/P19-engine"
 url: "https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0"
-
-abstract: |
-  P19 域外势能相变引擎是一套多房间隔离的异构 AI 审计系统，用于对形式化推理制品
-  （Lean 证明、数学推理链）进行诚实审计与受控真值升格。
-
-  核心创新：
-  1. 物理隔离 + 观测维度正交（形式化/数值/语义/对抗）
-  2. 真值三级体系（EMPIRICAL → THEOREM-COND → THEOREM）
-  3. 硬墙永久标记机制（GAP-OPEN，禁止美化）
-  4. 主动放弃能力（CANCELLED，可复活条件）
-
-  理论基础：P19 相变外驱定理、C-02 同系统多Agent无效审计推论。
-
+abstract: "A multi-room isolated heterogeneous AI audit system for honest auditing and controlled truth promotion of formal reasoning artifacts (Lean proofs, mathematical reasoning chains). Core innovations: physical isolation with orthogonal observation dimensions (formal/numerical/semantic/adversarial); three-level truth hierarchy (EMPIRICAL/THEOREM-COND/THEOREM); permanent hard-wall marking (GAP-OPEN); active abandonment capability (CANCELLED with revival conditions). Theoretical basis: P19 exogenous potential phase transition theorem and C-02 same-system multi-agent invalid audit corollary."
 keywords:
   - AGI
   - AI Safety
@@ -41,5 +25,4 @@ keywords:
   - Phase Transition
   - CXL Memory
   - Computational Epistemology
-
-copyright: "2026 郑奕廷. Licensed under Apache-2.0."
+copyright: "2026 Zheng Yiting. Licensed under Apache-2.0."
