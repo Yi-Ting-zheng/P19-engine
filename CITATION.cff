@@ -7,11 +7,15 @@ authors:
     given-names: Yiting
     alias: WangYi
     email: wayne777@agent.qq.com
-version: 0.1.0
+version: 0.1.1
 date-released: 2026-10-12
 license: Apache-2.0
 repository-code: "https://github.com/Yi-Ting-zheng/P19-engine"
-url: "https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0"
+url: "https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.1"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23322681
+    description: This specific version
 abstract: "A multi-room isolated heterogeneous AI audit system for honest auditing and controlled truth promotion of formal reasoning artifacts (Lean proofs, mathematical reasoning chains). Core innovations: physical isolation with orthogonal observation dimensions (formal/numerical/semantic/adversarial); three-level truth hierarchy (EMPIRICAL/THEOREM-COND/THEOREM); permanent hard-wall marking (GAP-OPEN); active abandonment capability (CANCELLED with revival conditions). Theoretical basis: P19 exogenous potential phase transition theorem and C-02 same-system multi-agent invalid audit corollary."
 keywords:
   - AGI

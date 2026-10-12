@@ -5,7 +5,8 @@
 > Truth doesn't depend on a single AI's self-awareness. It depends on heterogeneous computing power's physical constraints + human grounding.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/badge/release-v0.1.0-green.svg)](https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23322681.svg)](https://doi.org/10.5281/zenodo.23322681)
+[![Release](https://img.shields.io/badge/release-v0.1.1-green.svg)](https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.1)
 [![Status](https://img.shields.io/badge/status-skeleton-orange.svg)](#roadmap)
 
 ---
@@ -188,15 +189,17 @@
 ```bibtex
 @software{p19_engine,
   title = {P19 Exogenous Potential Phase Transition Engine},
-  author = {郑奕廷},
+  author = {Zheng, Yiting},
   year = {2026},
-  publisher = {GitHub},
-  version = {v0.1.0},
-  url = {https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0}
+  publisher = {Zenodo},
+  version = {0.1.1},
+  doi = {10.5281/zenodo.23322681},
+  url = {https://doi.org/10.5281/zenodo.23322681}
 }
 ```
 
-**GitHub**: [Yi-Ting-zheng/P19-engine](https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0)
+**DOI**: [10.5281/zenodo.23322681](https://doi.org/10.5281/zenodo.23322681)
+**所有版本 DOI**: [10.5281/zenodo.23322680](https://doi.org/10.5281/zenodo.23322680)
 
 ---
 
