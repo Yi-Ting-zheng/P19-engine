@@ -1,36 +1,32 @@
 # CITATION.cff - Zenodo 确权文件
 # 文档规范: https://citation-file-format.github.io/
 
-cff-version: 1.2.0
-message: "如果本项目对您的研究有帮助，请引用如下文献"
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: 郑
+    given-names: 奕廷
+    alias: 望易
+    email: wayne777@agent.qq.com
+
 title: "P19 域外势能相变引擎 (P19 Exogenous Potential Phase Transition Engine)"
 type: software
-authors:
-  - family-names: "[您的姓]"
-    given-names: "[您的名]"
-    orcid: "https://orcid.org/[您的ORCID]"
-# 可选: 如果有多个作者
-# authors:
-#   - family-names: "张"
-#     given-names: "三"
-#   - family-names: "Li"
-#     given-names: "Si"
-
 version: 0.1.0
-date-released: "2026-10-11"
+date-released: "2026-10-12"
 license: Apache-2.0
-repository-code: "https://github.com/[您的用户名]/P19-engine"
-url: "https://github.com/[您的用户名]/P19-engine"
+repository-code: "https://github.com/Yi-Ting-zheng/P19-engine"
+url: "https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0"
+
 abstract: |
   P19 域外势能相变引擎是一套多房间隔离的异构 AI 审计系统，用于对形式化推理制品
   （Lean 证明、数学推理链）进行诚实审计与受控真值升格。
-  
+
   核心创新：
   1. 物理隔离 + 观测维度正交（形式化/数值/语义/对抗）
   2. 真值三级体系（EMPIRICAL → THEOREM-COND → THEOREM）
   3. 硬墙永久标记机制（GAP-OPEN，禁止美化）
   4. 主动放弃能力（CANCELLED，可复活条件）
-  
+
   理论基础：P19 相变外驱定理、C-02 同系统多Agent无效审计推论。
 
 keywords:
@@ -46,25 +42,4 @@ keywords:
   - CXL Memory
   - Computational Epistemology
 
-# 可选: 学科分类
-# conference:
-#   title: "未发表"
-#   year: 2026
-
-# 可选: 相关论文
-# references:
-#   - type: article
-#     title: "P19 相变外驱定理"
-#     authors:
-#       - family-names: "[作者]"
-#         given-names: "[名字]"
-#     year: 2026
-#     doi: "[如有]"
-
-# 可选: 资助信息
-# funding:
-#   - name: "无"
-#     id: "无"
-
-# 可选: 版权声明
-copyright: "[年份] [版权持有者]. Licensed under Apache-2.0."
+copyright: "2026 郑奕廷. Licensed under Apache-2.0."

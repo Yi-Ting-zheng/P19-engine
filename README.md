@@ -5,7 +5,7 @@
 > Truth doesn't depend on a single AI's self-awareness. It depends on heterogeneous computing power's physical constraints + human grounding.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![Release](https://img.shields.io/badge/release-v0.1.0-green.svg)](https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0)
 [![Status](https://img.shields.io/badge/status-skeleton-orange.svg)](#roadmap)
 
 ---
@@ -188,15 +188,15 @@
 ```bibtex
 @software{p19_engine,
   title = {P19 Exogenous Potential Phase Transition Engine},
-  author = {Your Name},
+  author = {郑奕廷},
   year = {2026},
-  publisher = {Zenodo},
+  publisher = {GitHub},
   version = {v0.1.0},
-  doi = {10.5281/zenodo.XXXXXXX}
+  url = {https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0}
 }
 ```
 
-**DOI**: [10.5281/zenodo.XXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXX)
+**GitHub**: [Yi-Ting-zheng/P19-engine](https://github.com/Yi-Ting-zheng/P19-engine/releases/tag/0.1.0)
 
 ---
 
@@ -213,5 +213,7 @@
 ---
 
 <p align="center">
-  <i>不是造更强的 AI，是造"用异构算力制衡单一智能"的物理生态。</i>
+  <b>郑奕廷（望易）</b><br>
+  <i>不是造更强的 AI，是造"用异构算力制衡单一智能"的物理生态。</i><br>
+  <small>wayne777@agent.qq.com | WX: qmzywe666</small>
 </p>
