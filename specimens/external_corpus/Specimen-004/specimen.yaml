@@ -1,0 +1,61 @@
+# ============================================================
+# Specimen-004 — Family003 β≤7/8 反证链（外部语料标本）
+# 类型: external_corpus（新类型，见 docs/specimen_library.md §4）
+# 语料: OpenAI 722 数学手稿 · 准黎曼假设（pseudo-Riemann）
+# ============================================================
+
+specimen:
+  id: "Specimen-004"
+  type: "external_corpus"
+  name: "Family003 β≤7/8 反证链（零点实部上确界压缩探针）"
+  corpus: "OpenAI 722 数学手稿"
+  family: "Family003"
+  conjecture: "准黎曼假设"
+  created: "2026-10-13"
+  created_by: "P19-engine discovery layer"
+
+  artifact:
+    archive_copy: "source.md"                       # 本目录内不可变归档副本
+    original_path: "projects/emf/docs/003-sublemma-beta_le_seven_eighths.md"
+    archive_sha256: "4b161dfd77e2b3d3e04943e5d6b60a02310caa86c6ab6531c430477068ee6841"
+    lean_entry: "OAI.SevenEighths.HeckeCommonProbe.beta_le_seven_eighths"
+    lean_source: "math-main/lean/OAI/NumberTheory/DirichletL/Hecke/CommonProbe.lean:27"
+    lean_source_sha256: "db523b6b84d2464b34837d864e6d2811903e6085c2862eda85e1c8e2c7b839d4"
+    repo_root: "projects/emf/math-main"
+
+  verification:
+    lean_build_local: false                          # 本机无 .lake 构建目录
+    exit_code: null                                  # 待 lake build 后由 discovery 探针回填
+    static_scan:                                     # EV-AXIOM 静态声明级审计
+      scope: "math-main/lean/OAI/NumberTheory/DirichletL"
+      files: 2926
+      axiom_decls: 0                                 # axiom/constant/opaque 声明
+      sorry: 0
+      scanned_at: "2026-10-13"
+      method: "python static scan (regex ^axiom|constant|opaque, \\bsorry\\b)"
+      level: "declaration"                           # 声明级；#print axioms 运行时级待构建
+    build_level_axiom_print: "PENDING_BUILD"         # lake build 后回填
+
+  truth:
+    self_declared: "EMPIRICAL（对既有 Lean 定理的重述，非新定理）"
+    truth_grade: "EMPIRICAL"
+    truth_grade_basis: "restatement_of_machine_verified_lean"   # ≠ formal_syntax_only → EV-TRUTH-GRADE 不点火
+    conditional: true
+    conditional_on: "UniformCommonProbe (UCP)"
+    conditional_note: "UCP 非自由假设；由认证机器对每个 β>7/8 构造（FinalAssemblyChosenData.lean:57）。适用域严格为 UCP ⇒ β≤7/8"
+    external_artifact: true                          # H7 EV-* 规则的审计上下文
+
+  audit:
+    contract: "ipttt_contract.yaml"                  # IPTTT 五层契约 + 五窗口轮换映射
+    external_rules_track: "H7 (EV-AXIOM / EV-SURVIVOR / EV-TRUTH-GRADE)"
+    expected_ev_axiom: "CLEAN"                       # 0 公理声明，白名单外公理不存在
+    expected_ev_truth_grade: "NO_FIRE"               # 诚实自我分级，不点火
+    rooms: ["F", "N", "S", "A"]
+    windows: ["W1", "W2", "W3", "W4", "W5"]          # 阶段窗口轮换（docs/audit_windows.md）
+
+  provenance:
+    design_docs:
+      - "projects/emf/docs/数学攻略实验台_design_v0.1.md §1 (IPTTT 五层)"
+      - "projects/emf/docs/003-sublemma-beta_le_seven_eighths.md"
+      - "P19-engine/docs/audit_windows.md (窗口轮换方案)"
+    note: "归档性质依原稿自述：EMPIRICAL（定理复述）。严格化以机器验证为准。"

@@ -75,9 +75,32 @@
 
 ---
 
-## ✅ 已完成（原型验证）
+## ✅ 已完成
 
-### P0 原型：单基座 76 分钟闭环
+### P0 可运行原型骨架（2026-10-13）
+
+```bash
+python -m p19_engine.run_p0 --specimen all   # 三标本一键闭环自校验
+python -m pytest tests/                      # 48/48 全绿
+python tools/export_gap_ledger.py            # GAP 台账导出（哈希链）
+```
+
+| 组件 | 文件 | 说明 |
+|------|------|------|
+| 单向 YAML 协议 | `p19_engine/protocol.py` | SHA256 消息哈希 + 每房随机 token 防伪造 |
+| 四房间隔离沙箱 | `p19_engine/rooms.py` + `room_worker.py` | 独立子进程 + inbox/outbox 单向通道，互不通气 |
+| 四维观测器 | `p19_engine/observers.py` | F 形式化 / N 数值 / S 语义 / A 对抗 |
+| 相变状态机 | `p19_engine/state_machine.py` | QUEUED→…→DONE / FREEZED，非法转移抛错 |
+| 审计契约求值 | `p19_engine/audit.py` | math_attack_rules v0.6：13 规则 + 级联 + FP 禁式 + 白名单 |
+| 真值台账 | `p19_engine/ledger.py` | JSONL append-only + SHA256 哈希链，`verify()` 校验 |
+| 公理探针 | `p19_engine/discovery.py` | axiom/sorry/imports 静态扫描 + 硬墙裁决 |
+| 隔离加固（阶段 A） | `p19_engine/isolation.py` | 128-bit 随机房间目录 + icacls `(RD)` 父目录枚举阻断 + worker 自检（兄弟枚举/egress）+ 违规 FREEZED；详见 [docs/sandbox_isolation.md](docs/sandbox_isolation.md) |
+| GAP 注册表 | `config/gap_registry.yaml` | GAP-001（Schanuel 硬墙 OPEN）.. GAP-006 |
+| 标本库 | `specimens/` | 001 REJECT / 002 THEOREM-COND+GAP-001 / 003 CANCELLED / 004 外部语料 |
+
+**一键闭环预期**：001→REJECT 四房一致；002→THEOREM-COND，hits = MA-006/MA-006b/EV-TRUTH-GRADE，hard_wall=GAP-001；003→CANCELLED；台账 `verify: OK`。
+
+### P0 原型：单基座 76 分钟闭环（前期人工验证）
 
 **验证成果**：
 
@@ -111,16 +134,17 @@
 ### Phase 0：原型验证 ✅
 
 - [x] 单基座 76 分钟闭环
-- [x] Specimen 标本库（3 个标本）
+- [x] Specimen 标本库（3 个标本 + 004 外部语料）
 - [x] 真值台账系统
 - [x] 三标记体系
+- [x] P0 可运行骨架（协议/四房间/状态机/审计/台账，48 tests）
 
 ### Phase 1：双房间验证 🔜
 
-- [ ] 2 个隔离房间（形式化 + 对抗）
-- [ ] YAML 消息协议
-- [ ] 基础相变状态机
-- [ ] 阴性标本压力测试
+- [x] 4 个隔离房间（进程级；Docker/gVisor 容器级待做）
+- [x] YAML 消息协议
+- [x] 基础相变状态机
+- [x] 阴性标本压力测试
 
 ### Phase 2：四房间正交 🔜
 
@@ -176,8 +200,11 @@
 |------|------|
 | [docs/blueprint_v1.1.md](docs/blueprint_v1.1.md) | 完整工程蓝图 v1.1 |
 | [docs/revision_patch.md](docs/revision_patch.md) | v1.0 → v1.1 修订补丁 |
-| [docs/specimen_library.md](docs/specimen_library.md) | 标本库说明 |
+| [docs/specimen_library.md](docs/specimen_library.md) | 标本库说明（含外部语料类型 §4） |
+| [docs/audit_windows.md](docs/audit_windows.md) | 多独立窗口轮换审计方案（IPTTT） |
 | [docs/truth_ledger.md](docs/truth_ledger.md) | 真值台账规范 |
+| [docs/gap_ledger.md](docs/gap_ledger.md) | GAP 台账人读版（8 条，含 T2/T5 工程缺口） |
+| [docs/p0_review_verdict.md](docs/p0_review_verdict.md) | P0 交付评审裁决（有条件通过） |
 | [docs/human_protocol.md](docs/human_protocol.md) | 人脑接地协议 |
 
 ---

@@ -75,6 +75,38 @@ specimen:
   reconsider_when: "缺口1被攻克，需要 LW 级结果"
 ```
 
+### 4. 外部语料标本（External Corpus Specimen）
+
+**定义**：来自第三方语料库（如 OpenAI 722 数学手稿）的推理制品，接受本系统四房间审计
+
+**特征**：
+- `external_artifact: true`（审计上下文进入 H7 EV-* 规则）
+- 附 IPTTT 五层契约（意图/过程/触发/任务/终止 → 阶段窗口绑定）
+- 机器验证状态如实记录（本机未构建则 `exit_code: null`，静态扫描与运行时扫描分级标注）
+
+**示例**：Specimen-004（Family003 β≤7/8 反证链，准黎曼）
+
+```yaml
+specimen:
+  id: "Specimen-004"
+  type: "external_corpus"
+  corpus: "OpenAI 722 数学手稿"
+  artifact:
+    lean_entry: "OAI.SevenEighths.HeckeCommonProbe.beta_le_seven_eighths"
+    lean_source: "CommonProbe.lean:27"
+  verification:
+    lean_build_local: false
+    exit_code: null                # 待 lake build 回填
+    static_scan: {files: 2926, axioms: 0, sorry: 0}   # 声明级 EV-AXIOM：CLEAN
+  truth:
+    truth_grade: "EMPIRICAL"       # 定理复述（自述），非新定理
+    truth_grade_basis: "restatement_of_machine_verified_lean"
+    conditional_on: "UniformCommonProbe (UCP)"
+  audit:
+    contract: "ipttt_contract.yaml"
+    windows: ["W1", "W2", "W3", "W4", "W5"]   # 阶段窗口轮换 docs/audit_windows.md
+```
+
 ---
 
 ## 归档结构
@@ -104,6 +136,13 @@ specimens/
     │   ├── plan.md
     │   └── evidence/
     └── ...
+
+（外部语料，type-prefixed 同规则）
+external_corpus/
+└── Specimen-004/
+    ├── specimen.yaml          # 标本元数据（含静态扫描分级）
+    ├── ipttt_contract.yaml    # IPTTT 五层契约 + 阶段窗口绑定
+    └── source.md              # 归档副本（SHA256 固化）
 ```
 
 ---
@@ -130,12 +169,19 @@ truth_ledger:
       hash: "sha256:ghi789..."
       truth_status: "CANCELLED"
       alternative: "trdeg_API_调用指南"
+
+    - id: "Specimen-004"
+      hash: "sha256:jkl012..."
+      truth_status: "EMPIRICAL"          # 外部语料·定理复述（自述分级）
+      conditional_on: "UCP"
+      hard_wall: null
   
   statistics:
-    total: 3
+    total: 4
     positive: 1
     negative: 1
     cancelled: 1
+    external_corpus: 1
     
   append_only: true
   hash_chain: "sha256:xyz..."

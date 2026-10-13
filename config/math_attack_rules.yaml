@@ -1,0 +1,529 @@
+# 数学攻略实验台 — 事件规则契约 v0.2（schema 兼容示例）
+# 触发源类型：IFTTT 式条件契约（事件驱动）—— 数学可判定谓词 This → 计算/归档/级联动作 That
+# 真值层级：DEFINITION（规则集为约定；其**效果**为 EMPIRICAL）
+# 上级契约：runtime/README.md §三（反向举证门，优先级最高）
+# 状态：示例，位于 docs/（runtime/rules/ 之外），NOT ENFORCED —— 接入前须完成兼容性验证（设计文档 §6 第2步）
+
+meta:
+  # ══════════════════════════════════════════════════════════════
+  # 底层范式说明：IFTTT ↔ 数学语言映射（本规则集的语义根基）
+  # ══════════════════════════════════════════════════════════════
+  # IFTTT（If This Then That）本质 = 条件谓词 → 动作/赋值/断言，
+  # 与数学里的「令、假设、等式约束、分情况推导」是同一计算范式。
+  #
+  # 映射表：
+  #   假设/设（hypothesis）  → If H(x)=true Then 进入该分支、启用这组前提
+  #                            （对应 Lean 形式化 h : P；对应本文件 when: <谓词>）
+  #   等式约束               → If f(x)=0 Then 触发不变量锁死 / 冻结常数
+  #                            （即扩展词表 FREEZE_CONSTANT；残差判定：
+  #                             if residual_xN == 0 then freeze invariant_delta）
+  #   分情形讨论（case split）→ If A: … Elif B: … Else: … 等价于多组独立
+  #                            IFTTT 规则并行匹配（即多条 MA 规则）
+  #   级联推导（链式 IFTTT） → If MA-001 触发 Then 置级联标记；
+  #                            If 级联标记=true Then MA-002b 才允许激活
+  #                            （即 cascade_parent_triggered；对应数学
+  #                            「由 A 推出 B，再由 B 推出 C」的条件传递）
+  #
+  # 与普通软件 IFTTT 的关键差别（适配数学推导场景）：
+  #   普通 IFTTT：This 是外部现实事件（收到邮件、时间到点），That 多为 API 调用；
+  #   数学 IFTTT：This 是逻辑/数值命题，That 是断言、赋值、不变量锁定、升级扫描。
+  #   ⟹ 本文件约定：when = This；then = That。
+  #
+  # 边界提醒（对应真值层级）：
+  #   IFTTT 只是语法/执行框架 —— ✅ 可正确编码假设、等式、分情况、链式推导；
+  #   ❌ 框架本身不能保证数学命题为真。规则逻辑的效果只能标记 EMPIRICAL，
+  #   不能自动升格 THEOREM。形式合规 CONFIRMED（ARCH 已完成）≠ IFTTT 编码
+  #   出来的数学命题自动成立。
+  # ══════════════════════════════════════════════════════════════
+  contract: MATH-ATTACK-RULES
+  version: v0.6
+  date: 2026-10-12
+  scope: 数学攻略实验台（数论反证 / V5残差统计 / Lean核验 / 批量违例扫描 / 公理审计 / 证明可读性归档 / 人机双向翻译元契约 / 外部叙事审计（幸存者偏差·形式化暴政对等审计））
+  enforcement: PENDING_ALIGNMENT  # 检查器已补写（脚本/check_runtime_contract.py，2026-10-09）；路径已改为实验台自身输出（前瞻性契约），实验台未运行前 0 命中为预期状态。记录：runtime/logs/CONTRACT-CHECK-20261009-2119.log
+  schema_source: runtime/rules/events.yaml v1.0   # 顶层节点同构：meta / rules / forbidden_patterns / independence_declaration
+  precedence: >
+    本文件的任何 THEN 分支，其优先级均低于 runtime/README.md §三
+    （反向举证门）。冲突时以反向举证门为准。
+  action_vocabulary_extension:   # ARCH 裁决第 4 项：4 个新动词的契约级批准声明
+    base_vocabulary: [BLOCK_START, DOWNGRADE, FLAG_AMBIGUOUS, FLAG_REWORK, REJECT_EVIDENCE]
+    extended_vocabulary: [ESCALATE_SCAN, FREEZE_CONSTANT, LAUNCH_CASCADE, REFINE_SAMPLE]
+    approval_status: PENDING_APPROVAL   # 待 check_runtime_contract.py 实现后挂载批准
+    note: 扩展动词仅用于数学观测域；与 base 词表零交集，无动作语义冲突（ARCH 复核确认）
+  escalation_routing:   # ARCH 裁决第 3 项：escalation 目标实体化
+    MODULE-4: {status: design_only, suggested_agent: exp-simulator, note: 动作工坊未实现为 runtime 实体，接入时映射}
+    MODULE-5: {status: design_only, suggested_agent: arch-verdict, note: 终止判定器未实现为 runtime 实体，接入时映射}
+    arch-verdict: {status: routable, note: 既有 Agent}
+  path_base:   # domain_observation.path 的解析基准（ARCH 裁决第 1 项：路径实体化）
+    default: projects/emf            # 与 events.yaml 同基准：相对 EMF 根
+    cross_domain: D:/SiliconLifeOS   # 跨域观测以绝对路径前缀显式声明
+    note: >
+      MA-001/002/003/002b 观测数学攻略实验台**自身计算输出**（05_课题/ 下实验台
+      课题的 02_实验/ 目录，运行时产生）；MA-004 观测判据结论（04_结论/）。
+      均以 EMF 根为基准。实验台未运行前 0 命中为**预期状态**（前瞻性契约，
+      IFTTT 的 This 等实验台运行才触发），非绑定失败。
+      ⚠️ 2026-10-09 修正：此前路径误指 P1/vinf（V5 学习机制历史实验数据），
+      与数学攻略实验台语义域不同，已改回实验台自身输出。
+
+# ══════════════════════════════════════════════════════════════
+# 数学事件规则集（七轨：H0 元契约 / H1 残差 / H2 符号 / H3 收敛 / H4 违例 / H5 公理 / H6 可读性 / H7 叙事审计）
+# ══════════════════════════════════════════════════════════════
+rules:
+
+  # ── H0 轨：顶层元契约（跨课题复用，最高优先级）───────────────
+  - id: MA-000
+    name: 人机双向翻译元契约
+    description: >
+      跨领域可复用的顶层交付标准。任何机器工件（Lean 证明、仿真输出、
+      符号计算结果、形式化验证）通过自动化核验（EXIT=0）后，
+      必须完成人类可读转化，才算完整交付。
+      编译/仿真通过 ≠ 交付完成；MACHINE_VERIFIED ≠ HUMAN_ARTICULATED。
+    domain_observation:
+      - path: "**/*"                                # 任意机器工件产出路径
+      - field: machine_verification_status          # MACHINE_VERIFIED / HUMAN_ARTICULATED
+      - field: artifact_type                        # LEAN_PROOF / SIMULATION / SYMBOLIC / FORMAL_VERIFICATION
+    when:
+      machine_verification_passed: true             # This：自动化核验通过（EXIT=0）
+      human_articulation_missing: true              # 且人类可读转化未完成
+    then:
+      action: LAUNCH_CASCADE                        # 触发四层转化流水线
+      cascade_parent_triggered: true                # 置位级联信号（供下游规则使用）
+      pipeline:                                     # 四层转化（按序执行）
+        - layer: 1_artifact                         # ① 机器工件层
+          actions: [extract_dependency_graph,       # 提取依赖图
+                    extract_assumption_set,         # 提取公理/假设清单
+                    generate_sha256_snapshot]       # SHA256 哈希快照
+          ledger: true                              # 写入审计台账
+        - layer: 2_strategy_summary                 # ② 策略摘要层
+          actions: [strip_low_level_glue,           # 剥离底层机器胶水步骤
+                    extract_top_level_strategy,     # 提取顶层策略/分岔结构/核心引理
+                    generate_human_readable_summary] # 生成人类可读摘要
+        - layer: 3_knowledge沉淀                    # ③ 知识库沉淀层
+          actions: [match_existing_templates,       # 匹配已有领域模板
+                    extract_reusable_patterns,      # 提炼通用范式
+                    append_methodology_doc]         # 追加到方法论文档
+        - layer: 4_delivery_gate                    # ④ 交付门控
+          actions: [verify_summary_completeness,    # 校验摘要完整性
+                    upgrade_delivery_status]        # MACHINE_VERIFIED → HUMAN_ARTICULATED
+      emit: "HUMAN_ARTICULATION_PENDING —— 机器核验通过，四层转化流水线已触发"
+      escalation: MODULE-4
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT]
+      delivery_status_ladder:                       # 交付状态阶梯
+        MACHINE_VERIFIED: 仅机器通过（工件存在，人读晦涩）
+        HUMAN_ARTICULATED: 完成人类可读转化（摘要+依赖图+范式沉淀）
+        FULLY_ARCHIVED: 完整归档（含台账+方法论追加+跨课题复用标记）
+      truth_discipline:                             # 真值层级纪律
+        rule: >
+          MACHINE_VERIFIED 不等于 EMPIRICAL/THEOREM。
+          只有完成策略归档（HUMAN_ARTICULATED），才进入完整成果台账。
+          交付状态与真值层级正交：交付是工程完成度，真值是数学可信度。
+      note: >
+        核心区分：机器可读形式证明 ≠ 人类可理解的数学论证。
+        AGI 追求机器独立完成任务，人只看最终结论；
+        本契约范式要求机器产出的任何形式化成果，必须附带
+        人类可读的策略导航、依赖图谱、踩坑台账。
+        机器的原始证明只是底层工件，可被人消化理解才是交付标准。
+        跨领域适用：数理（形式化证明/数值实验）、工程（芯片验证/控制理论）、
+        生物（基因模拟/动力学通路）、法律（合同逻辑/法条校验）。
+        一句话：AGI 是「机器替人得到答案」；
+        本契约是「让机器产出的任何严谨结果，都能稳定翻译成
+        人类可掌握、可复用的知识」。
+
+  # ── H1 轨：V5 残差阈值触发 ─────────────────────────────────
+  - id: MA-001
+    name: 残差越阈
+    description: 分片窗口残差 x(N) 超过阈值 ε → 保存分片 + Richardson 外推
+    domain_observation:                 # 观测维度（独立性由它承载，有限样本可计算）
+      - path: 05_课题/*数学攻略*/02_实验/*.json   # 实验台自身计算输出（运行时产生）
+      - field: residual_xN
+      - compare: threshold_eps
+    when:
+      residual_xN > 1e-4
+    then:
+      action: REFINE_SAMPLE
+      store_shard: true
+      richardson_extrapolate: true
+      cascade_parent_triggered: true    # ARCH 裁决第 2 项：显式置位级联信号（闭合 MA-002b）
+      emit: "RESIDUAL_EXCEED —— 分片触发密采样+外推"
+      escalation: MODULE-4
+      forbidden: [MARK_VERDICT]          # 反向举证门：不产出「命题成立」
+
+  # ── H2 轨：符号翻转触发（零点穿越检测）──────────────────────
+  - id: MA-002
+    name: 符号翻转
+    description: sign(x_{n+1}) != sign(x_n) → 定点细化 + 二分搜索临界点
+    domain_observation:
+      - path: 05_课题/*数学攻略*/02_实验/*.json   # 实验台自身计算输出（运行时产生）
+      - field: sign_xN
+    when:
+      sign_change: true
+    then:
+      action: REFINE_SAMPLE
+      refine_root_bisect: true
+      cascade_parent_triggered: true    # ARCH 裁决第 2 项：显式置位级联信号（闭合 MA-002b）
+      emit: "SIGN_FLIP —— 临界点细化"
+      escalation: MODULE-4
+      forbidden: [MARK_VERDICT]
+
+  # ── H3 轨：渐近收敛触发（冻结经验常数）──────────────────────
+  - id: MA-003
+    name: 不变量收敛
+    description: abs( x(N)*ln^3(N) - const ) < delta → 停止采样，冻结经验常数
+    domain_observation:
+      - path: 05_课题/*数学攻略*/02_实验/*.json   # 实验台自身计算输出（运行时产生）
+      - field: invariant_delta
+    when:
+      invariant_delta < 1e-5
+    then:
+      action: FREEZE_CONSTANT
+      freeze_empirical_constant: true
+      emit: "INVARIANT_CONVERGED —— 冻结经验常数（EMPIRICAL，不升格）"
+      escalation: MODULE-5
+      forbidden: [ACCEPT_THEOREM]        # EV-004 / FP-IPTTT-03：多次一致不构成定理
+
+  # ── H4 轨：违例扫描触发（判据分轨）─────────────────────────
+  - id: MA-004
+    name: 判据违例
+    description: H1 判据 FAIL → 保存分片 + 注入负向测试 + 标记 GAP 状态
+    domain_observation:
+      - path: 05_课题/*数学攻略*/04_结论/*.json   # 判据结论（实验台产出）
+      - field: h1_verdict
+    when:
+      h1_verdict: FAIL
+    then:
+      action: LAUNCH_CASCADE
+      save_shard: true
+      inject_negative_test: true
+      mark_gap: true
+      emit: "H1_VIOLATION —— 分片已定格+负向注入+GAP标记"
+      escalation: arch-verdict
+      forbidden: [MARK_VERDICT]
+
+  # ── 级联示例：H1 越阈后，仅对命中区提升采样密度 ────────────
+  - id: MA-002b
+    name: 判决带密采样（级联下层）
+    description: 由 MA-001/002 触发（cascade_parent_triggered 置位）；粗采样命中区才开密采样，省计算步数
+    domain_observation:
+      - path: 05_课题/*数学攻略*/02_实验/*.json   # 实验台自身计算输出（运行时产生）
+      - field: cascade_budget
+    when:
+      cascade_parent_triggered: true    # 信号源：MA-001/MA-002 的 then 显式置位（已闭合）
+    then:
+      action: ESCALATE_SCAN
+      dense_sample_budget: 3x
+      emit: "CASCADE —— 密采样预算 ×3（仅命中区）"
+      escalation: MODULE-4
+      forbidden: [MARK_VERDICT]
+      note: 级联目标：避免全局全密，与矩阶乘法省步数目标一致
+
+  # ── H5 轨：公理依赖审计（Phase-M4 新增，MA-000 ①层的审计实现）──
+  - id: MA-005
+    name: 公理清单变动审计
+    description: >
+      MA-000 元契约 ①机器工件层的审计实现。当 Lean 定理的 #print axioms
+      输出发生变动（新增/删除公理）时，自动生成 SHA256 哈希快照 + 台账记录，
+      防止公理意外膨胀。
+    domain_observation:
+      - path: lean_game_theory/GameTheory/*.lean   # Lean 源文件
+      - field: axioms_dependency_set               # #print axioms 输出的公理名集合
+      - baseline: axiom_baseline.json              # 台账基准（SHA256 哈希 + 公理集快照）
+    when:
+      axiom_set_changed: true                      # This：公理集合与基准不一致
+    then:
+      action: FREEZE_CONSTANT                      # 冻结当前状态，不自动接受
+      generate_sha256_snapshot: true               # 生成 SHA256 哈希
+      append_ledger: true                          # 追加台账记录（append-only）
+      diff_report: true                            # 生成差异报告（新增/删除公理）
+      emit: "AXIOM_DRIFT —— 公理集变动，已生成快照+台账"
+      escalation: arch-verdict                     # 升级至架构审查
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT]    # 不自动接受、不产出成立判定
+      note: >
+        公理膨胀是形式化系统的「隐性技术债」。每次变动必须显式记录，
+        防止 axiom 悄悄混入 theorem 依赖链。基线由 axiom_baseline.json 维护。
+
+  - id: MA-005b
+    name: 公理意外膨胀检测（级联下层）
+    description: >
+      由 MA-005 触发后，检测新增公理是否在白名单内。
+      白名单外公理 = 意外膨胀，必须阻断。
+    domain_observation:
+      - path: lean_game_theory/GameTheory/*.lean
+      - field: new_axioms                          # MA-005 差异报告中的新增公理
+      - whitelist: axiom_whitelist.json            # 允许的公理集（核公理 + 已知公理）
+    when:
+      cascade_parent_triggered: true               # 信号源：MA-005 的 then 显式置位
+      new_axioms_not_in_whitelist: true            # 新增公理不在白名单内
+    then:
+      action: BLOCK_START                          # 阻断构建
+      emit: "AXIOM_BLOAT —— 意外公理膨胀，构建阻断"
+      escalation: arch-verdict
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT, DOWNGRADE]
+      note: >
+        白名单外公理必须经人工审查后才能加入白名单。
+        防止「为了编译通过」而临时引入 axiom 的技术债累积。
+
+  # ── H6 轨：证明可读性归档（Phase-M4 新增，MA-000 的 Lean 专用实例）──
+  - id: MA-006
+    name: 形式证明人类可读性归档
+    description: >
+      MA-000 元契约的 Lean 专用实例。当新 Lean 证明编译成功（EXIT=0）时，
+      自动触发任务：提取证明顶层策略，生成人类可读的证明摘要 + 归档引理依赖图。
+      只编译通过的证明，不自动算作「人类可理解成果」——
+      必须同时产出摘要，才算完成归档。
+    domain_observation:
+      - path: lean_game_theory/GameTheory/*.lean   # Lean 源文件
+      - field: build_exit_code                      # lake build 退出码
+      - field: proof_summary_exists                 # 摘要文件是否存在
+      - summary_dir: proof_summaries/              # 摘要归档目录
+    when:
+      build_exit_code: 0                            # This：编译成功
+      proof_summary_missing: true                   # 且摘要未产出
+    then:
+      action: LAUNCH_CASCADE                        # 触发摘要生成任务
+      cascade_parent_triggered: true                # 置位级联信号（供 MA-006b 使用）
+      extract_top_level_strategy: true              # 提取顶层证明策略
+      generate_human_summary: true                  # 生成人类可读摘要
+      archive_lemma_dependency_graph: true          # 归档引理依赖图
+      emit: "PROOF_UNDOCUMENTED —— 编译成功但缺人类可读摘要，已触发生成"
+      escalation: MODULE-4
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT]
+      note: >
+        核心区分：机器可读形式证明 ≠ 人类可理解的数学论证。
+        Lean/Isabelle 输出的证明项本质是机器校验的低阶逻辑脚本，
+        不是写给人阅读的数学文本。编译成功只证明「逻辑链条对证明器
+        完全透明、可机械核验」，不证明「人类能快速看懂为什么这个
+        思路能成功」。
+        摘要必须包含：① 顶层策略（分岔结构、核心矛盾构造）
+        ② 引理依赖图（哪些辅助引理支撑哪些步骤）
+        ③ 踩坑经验（API 坑、类型转换陷阱）
+        ④ 通用范式（可复用到其他命题的模板）
+        对应产物：《多项式代数无关性证明指南》即 MA-006 的首次实例。
+
+  - id: MA-006b
+    name: 摘要质量门控（级联下层）
+    description: >
+      由 MA-006 触发后，检查摘要是否满足最低质量要求。
+      不满足则退回重写，不计入归档。
+    domain_observation:
+      - path: proof_summaries/*.md                  # 摘要文件
+      - field: summary_sections                     # 摘要章节完整性
+    when:
+      cascade_parent_triggered: true               # 信号源：MA-006
+      summary_incomplete: true                      # 缺少必需章节
+    then:
+      action: FLAG_REWORK                           # 退回重写
+      emit: "SUMMARY_INCOMPLETE —— 摘要缺少必需章节，退回"
+      escalation: MODULE-4
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT, DOWNGRADE]
+      required_sections:                            # 最低质量要求
+        - top_level_strategy                        # 顶层策略
+        - lemma_dependencies                        # 引理依赖
+        - pitfalls                                  # 踩坑经验
+        - reusable_patterns                         # 通用范式
+      note: >
+        摘要不是装饰，是双向闭环的上层产物。
+        无摘要的编译通过 = 只产出可校验对象，未产出可理解成果。
+
+  # ── H7 轨：外部叙事审计（2026-10-12 新增：幸存者偏差 / 形式化暴政对等审计）──
+  # 背景：外部 corpus 以 12000 次开放问题试探 → 722 份对外展示（≈6% 筛选率）
+  # 制造「AI 攻克数学难题」媒体叙事，失败样例/隐藏公理变体封存不公开。
+  # 本轨以形式化工具反审计形式化产出：Lean 编译通过 = 类型检查语法合规，
+  # ≠ 命题在标准模型下为真（MA-000：编译通过是交付必要条件，绝非充分条件）。
+  # 对应《人机双向契约宣言》：机器可读 ≠ 人类文明可继承。
+
+  - id: EV-AXIOM
+    name: 外部手稿非标准公理注入审计
+    description: >
+      对等审计第三方「机器攻克数学难题」类手稿（外部代审 corpus）。
+      sorry_count=0、编译全绿只证明类型检查语法合规；若证明链把
+      未证猜想强行作为前提（白名单外公理注入），必须自动打
+      GAP-OPEN 标签并阻断任何 THEOREM 升格。以魔法对抗魔法：
+      黑盒生成器是软件，审计探针也是软件，公理依赖可被自动化扫描提取。
+    domain_observation:
+      - path: "04_结论/**/audit_corpus/**"     # 代审手稿库（发现层探针输出；前瞻性契约，0 命中为预期）
+      - field: axiom_set                        # #print axioms 提取的公理集
+      - field: new_axioms_not_in_whitelist      # 白名单外公理（axiom_whitelist 对比）
+      - field: sorry_count                      # sorry/隐藏前提计数
+    when:
+      external_artifact_scanned: true           # This：扫描对象是外部代审手稿
+      new_axioms_not_in_whitelist: true         # 且引入白名单外公理
+    then:
+      action: BLOCK_START                       # 阻断该手稿进入升格流程
+      mark_gap_open: true                       # 自动打 GAP-OPEN 标签
+      emit: "EV_AXIOM —— 外部手稿引入非标准公理，已打 GAP-OPEN 并阻断升格"
+      escalation: arch-verdict
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT]
+      note: >
+        与 H5 轨分工：MA-005/005b 审自身构建的公理漂移与膨胀（级联内），
+        EV-AXIOM 审外来手稿的逐件公理注入（跨域代审）。
+        编译全绿 + sorry_count=0 + 内置非平凡公理 = 形式化暴政的典型形态，
+        形式语法的合规性不能偷换数学命题的真值。
+
+  - id: EV-SURVIVOR
+    name: 幸存者偏差样本集披露率审计
+    description: >
+      当外部 corpus 只公开筛选后的成功样本、封存失败样例时，
+      其「成功率」叙事失去证据基础。失败样本披露率低于阈值 →
+      标记叙事风险，该样本集不得作为 EMPIRICAL 及以上真值的证据来源。
+      审计方义务：尸检全部样本（含失败样本、逻辑断裂、隐藏公理、
+      未暴露 sorry 变体），不被对外展示的幸存者子集欺骗。
+    domain_observation:
+      - path: "04_结论/**/audit_corpus/**"     # 代审 corpus（公开样本 + 已知封存样本）
+      - field: published_samples                # 对外展示样本数
+      - field: known_total_probes               # 已知总试探次数
+      - field: failure_disclosure_ratio         # 失败样本披露率 = 已披露失败 / 已知失败
+    when: failure_disclosure_ratio < 0.5        # This：失败样本披露率低于 50%
+    then:
+      action: FLAG_AMBIGUOUS                    # 标记叙事风险
+      emit: "EV_SURVIVOR_BIAS —— 失败样本披露率低于阈值，样本集证据力降级"
+      escalation: arch-verdict
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT]
+      note: >
+        观测锚点（2026-10-12）：外部 corpus 公开 722 / 12000 ≈ 6% 筛选率，
+        大量失败样例封存不公开——媒体只播报成功样本。
+        「未检出失败」是关于筛选机制的陈述，不能转写为关于数学命题
+        的陈述（与 FP-MATH-01 反向举证门同构）。
+        失败尸体不入台账 = 虚假繁荣；红绿并存原则同样适用于
+        外部 corpus 的样本集。
+
+  - id: EV-TRUTH-GRADE
+    name: 形式语法合规与真值层级强制分离
+    description: >
+      禁止以「编译通过 / sorry_count=0 / 类型检查全绿」为唯一依据
+      将命题升格 THEOREM。形式语法通过是交付必要条件（MA-000），
+      绝非充分条件；真值层级必须由公理审计 + 缺口建档 + 分层判定
+      独立给出。检测到 formal_syntax_only 依据的 THEOREM 请求 → 强制降格。
+    domain_observation:
+      - path: "04_结论/**/audit_corpus/**"     # 代审手稿库
+      - field: formal_syntax_passed             # 编译 EXIT=0 且 sorry_count=0
+      - field: truth_grade_requested            # 请求的真值层级
+      - field: truth_grade_basis                # 升格依据类型
+    when:
+      formal_syntax_passed: true                # This：仅形式语法通过
+      truth_grade_requested: "THEOREM"          # 请求直升 THEOREM
+      truth_grade_basis: "formal_syntax_only"   # 且依据仅为形式语法
+    then:
+      action: DOWNGRADE                         # 强制降格
+      downgrade_to: "THEOREM-COND"              # 至多条件定理（公理显式 + GAP-OPEN 标注）
+      emit: "EV_TRUTH_GRADE —— 形式语法通过 ≠ 数学真值成立，禁直升 THEOREM"
+      escalation: arch-verdict
+      forbidden: [ACCEPT_THEOREM, MARK_VERDICT]
+      note: >
+        真值层级升格通路保持刚性：EMPIRICAL ≠> THEOREM（递归升级禁令），
+        formal_syntax_only 同理 ≠> THEOREM。若公理集含白名单外项，
+        降格结果进一步钉死在 EMPIRICAL + GAP-OPEN（与 EV-AXIOM 联动）。
+        依据《人机双向契约宣言》：机器产出机器知识；只有经过公理审计、
+        缺口建档、真值分级、失败样本完整留存的知识，才是可交付人类
+        文明继承的知识。三方格局：舞台魔术师（筛选后展示）/
+        人工审阅（缺批量工具）/ 本轨自动化审计流水线（可归档、可复核、可继承）。
+
+# ══════════════════════════════════════════════════════════════
+# 公理基线台账格式（MA-005 生成）
+# ══════════════════════════════════════════════════════════════
+axiom_baseline_format:
+  description: MA-005 生成的 SHA256 快照 + 台账记录格式
+  fields:
+    - timestamp               # ISO 8601 时间戳
+    - declaration             # 定理名（如 GT001_m3）
+    - axioms                  # 公理名集合（排序后）
+    - sha256                  # 公理集的 SHA256 哈希（排序拼接后哈希）
+    - phase                   # 所属 Phase（M1/M2/M3/M4/M5）
+    - diff_from_baseline      # 与上一版的差异（added/removed）
+    - reason                  # 变动原因（如 "step2_linearIndep axiom→theorem"）
+  storage: axiom_baseline.jsonl   # append-only 台账
+  example: |
+    {"timestamp": "2026-10-11T12:00:00Z", "declaration": "GT001_m3",
+     "axioms": ["Classical.choice", "Quot.sound", "SchanuelAt",
+                "propext", "step1_algIndep_pi_lnp", "step3_algIndep_four"],
+     "sha256": "a1b2c3...", "phase": "M4",
+     "diff_from_baseline": {"removed": ["step2_linearIndep"]},
+     "reason": "step2_linearIndep axiom→theorem (Phase-M4)"}
+
+# ══════════════════════════════════════════════════════════════
+# 公理白名单（MA-005b 强制）
+# ══════════════════════════════════════════════════════════════
+axiom_whitelist:
+  core_lean:                  # Lean 核公理（永远允许）
+    - propext
+    - Classical.choice
+    - Quot.sound
+  known_domain:               # 已知领域公理（经审查批准）
+    - SchanuelAt              # Schanuel 猜想实例（HYPOTHESIS 层）
+    - step1_algIndep_pi_lnp   # rev11 步骤1（深超越理论）
+    - step3_algIndep_four     # rev11 步骤3（深超越理论）
+    - step3_chain_e_lnp_algIndep   # TC-3 步骤1
+    - step3_chain_linearIndep      # TC-3 步骤2
+    - step3e_algIndep_four         # TC-3 最终
+  forbidden:                  # 永久禁止（stub 泄漏 + sorry）
+    - sorryAx
+    - SchanuelInstance        # M1/M2 旧名，M3+ 禁止
+    - Real                    # stub 公理
+    - one                     # stub 公理
+    - pi                      # stub 公理
+    - ln_pi                   # stub 公理
+    - two_pi_i                # stub 公理
+    - mul                     # stub 公理
+    - pow                     # stub 公理
+    - e                       # stub 公理
+    - Transcendental          # stub 公理
+
+# ══════════════════════════════════════════════════════════════
+# 禁止的规则形态（继承 events.yaml，数学版对照）
+# ⚠️ ID 命名空间：FP-MATH-* 前缀，避免与 events.yaml 的 FP-IPTTT-* 重号键覆盖
+#    （ARCH 裁决第 4 项：合并注册表时须命名空间隔离）
+# ══════════════════════════════════════════════════════════════
+forbidden_patterns:
+  - id: FP-MATH-01
+    bad: >
+      IF 扫描未发现残差越阈 THEN 标记「零点是素数」成立
+    why: >
+      「未检出」是关于扫描器的陈述，不能转写为关于数学对象的陈述（反向举证门）。
+  - id: FP-MATH-02
+    bad: >
+      IF 换用另一个 Lean 环境重跑且结果一致 THEN 判定已独立确权
+    why: >
+      换环境/换基座只换载体，规则维度不变 ⟹ 零独立性（C-02 §二）。
+  - id: FP-MATH-03
+    bad: >
+      IF 分片多次独立一致 THEN 升格为 THEOREM
+    why: >
+      rev-04 递归升级禁令：累积证据只提高置信度，不改变真值层级。
+  - id: FP-MATH-04
+    bad: >
+      IF 分析/推导支持此结论 THEN 判定无需机器校验
+    why: >
+      无穷命题不可作触发器；经验实证支持 ≠ 数学严格证明（L3 结论需证明链）。
+
+# ══════════════════════════════════════════════════════════════
+# 独立性声明格式（强制，与 events.yaml 同构）
+# ══════════════════════════════════════════════════════════════
+independence_declaration:
+  required_fields:
+    - base_model              # 同/异基座（同基座不构成减罪，也不免除独立性论证）
+    - rule_dimension          # 同/异规则+观测维度（承载独立性者）
+    - truth_level             # 恒 EMPIRICAL，不得升格
+  forbidden: >
+    只声明 base_model 而不声明 rule_dimension —— 该声明视为不完整。
+
+# ─────────────────────────────────────────────────────────────────
+# 契约版本 v0.5｜2026-10-11｜规则 10 条（H0 元契约 + H1-H6 + 级联×4）+ 禁止形态 4 条
+# v0.2 变更（ARCH 裁决 5 项补齐）：path 实体化 / 级联闭合 / escalation 标注 design_only
+#   / action 词表扩展声明 / FP-MATH-* 命名空间隔离
+# v0.3 变更（Phase-M4 公理审计）：
+#   - 新增 MA-005 公理清单变动审计（IFTTT：公理集变动 → SHA256 快照 + 台账）
+#   - 新增 MA-005b 公理意外膨胀检测（级联：白名单外公理 → 阻断构建）
+#   - 新增 axiom_baseline_format 台账格式定义
+#   - 新增 axiom_whitelist 公理白名单（core_lean + known_domain + forbidden）
+# v0.4 变更（Phase-M4 证明可读性归档）：
+#   - 新增 MA-006 形式证明人类可读性归档（IFTTT：编译成功 + 摘要缺失 → 触发摘要生成）
+#   - 新增 MA-006b 摘要质量门控（级联：摘要不完整 → 退回重写）
+#   - 核心区分：机器可读形式证明 ≠ 人类可理解的数学论证
+#   - 编译成功 ≠ 归档完成；摘要产出才算完成归档
+# v0.5 变更（顶层元契约，跨课题复用）：
+#   - 新增 MA-000 人机双向翻译元契约（跨领域可复用的顶层交付标准）
+#   - 四层转化流水线：① 机器工件层 → ② 策略摘要层 → ③ 知识库沉淀层 → ④ 交付门控
+#   - 交付状态阶梯：MACHINE_VERIFIED → HUMAN_ARTICULATED → FULLY_ARCHIVED
+#   - 真值层级纪律：交付状态与真值层级正交（交付是工程完成度，真值是数学可信度）
+#   - 跨领域适用：数理/工程/生物/法律等形式化验证场景
+# 示例态：未接入 runtime｜页脚用注释而非 `---` 后裸行（规避 events.yaml 页脚不可解析缺陷）
+# 2026-10-09 修正：MA-001/002/003/002b 路径改为实验台自身输出（05_课题/*数学攻略*/02_实验/*.json），
+# MA-004 改为实验台 04_结论/*.json。此前误指 P1/vinf 历史数据，已纠正。

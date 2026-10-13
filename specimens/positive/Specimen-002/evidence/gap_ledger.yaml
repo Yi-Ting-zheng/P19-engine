@@ -1,0 +1,159 @@
+gap_ledger:
+  append_only: true
+  entries:
+  - entry_hash: 6f5c0fa6c119af3a0dfaba5724cd3e578c7cdac05f4cd8ddabea3b267e93adf9
+    gap:
+      classification: mathematical_barrier
+      content: SchanuelAt → 代数无关性 trdeg 推导
+      fixable: false
+      id: GAP-001
+      mathlib_status: 无（LW 也无法填补）
+      needs_lw: false
+      note: 唯一硬墙；缺口 2-6 全部可攻克后仍被它阻塞
+      ordinal: 1
+      status: OPEN
+      title: Schanuel 猜想本体（trdeg 桥接硬墙）
+      truth_status: HYPOTHESIS
+      used_by:
+      - Specimen-002
+    prev_hash: 588234645c08ebb5aa6d245213a9aba3160beb0c22c6be363a3ad3668c3aac64
+    registry_version: v2026.10.13.002
+    seq: 1
+  - entry_hash: a1f422158f5f62188a2e217a93d73eef724d5a186e0d9568325a3e86a07289c9
+    gap:
+      classification: complex_analysis
+      fixable: true
+      id: GAP-002
+      mathlib_status: ✅ 现成：Complex.exp_log（Analysis/SpecialFunctions/Complex/Log.lean:41）
+      needs_lw: false
+      ordinal: 2
+      resolved_by: M6-03
+      status: RESOLVED
+      title: e^{lnπ} = π
+    prev_hash: 6f5c0fa6c119af3a0dfaba5724cd3e578c7cdac05f4cd8ddabea3b267e93adf9
+    registry_version: v2026.10.13.002
+    seq: 2
+  - entry_hash: 55170c689fa84a504dd14804f11feb58e9b40dfba7b495af0ef3b08b4b89c48f
+    gap:
+      classification: euler_identity
+      fixable: true
+      id: GAP-003
+      mathlib_status: ✅ 现成：Complex.exp_two_pi_mul_I（Trigonometric/Basic.lean:1224）
+      needs_lw: false
+      ordinal: 3
+      resolved_by: M6-03
+      status: RESOLVED
+      title: e^{2πi} = 1
+    prev_hash: a1f422158f5f62188a2e217a93d73eef724d5a186e0d9568325a3e86a07289c9
+    registry_version: v2026.10.13.002
+    seq: 3
+  - entry_hash: fff000f015f808a39fa64c33c499c423156f941b5396e8d12637ee7b9ca51a8c
+    gap:
+      classification: commutative_algebra
+      fixable: true
+      id: GAP-004
+      mathlib_status: ✅ 可证：trdeg_add_le
+      needs_lw: false
+      note: 证明思路同 GAP-005，令 S=ℚ(a), A=ℚ(a,b)
+      ordinal: 4
+      status: SOLVABLE
+      title: 代数扩张 trdeg 不变
+    prev_hash: 55170c689fa84a504dd14804f11feb58e9b40dfba7b495af0ef3b08b4b89c48f
+    registry_version: v2026.10.13.002
+    seq: 4
+  - entry_hash: 0986d234134a285587c47438e9d1077c8a6b32ef6303729a58a67f1fefc3fc93
+    gap:
+      classification: commutative_algebra
+      fixable: true
+      id: GAP-005
+      mathlib_status: ✅ 可证：trdeg_add_le + trdeg_eq_zero
+      needs_lw: false
+      note: a 在 S 上代数 ⟹ trdeg S A = 0 ⟹ 超越次数不增
+      ordinal: 5
+      status: SOLVABLE
+      title: 代数元不增加 trdeg
+    prev_hash: fff000f015f808a39fa64c33c499c423156f941b5396e8d12637ee7b9ca51a8c
+    registry_version: v2026.10.13.002
+    seq: 5
+  - entry_hash: 5c9a553578535ac5ccd16623400748e0ac04c3398f4d93f343d140131d2ca2ed
+    gap:
+      classification: transcendence_theory
+      fixable: true
+      id: GAP-006
+      mathlib_status: ✅ 可证：isTranscendenceBasis_of_le_trdeg + cardMk_eq_trdeg（需确认
+        API 调用链）
+      needs_lw: false
+      ordinal: 6
+      status: SOLVABLE
+      title: trdeg ≥ 2 + 2 元生成 ⟹ 代数无关
+    prev_hash: 0986d234134a285587c47438e9d1077c8a6b32ef6303729a58a67f1fefc3fc93
+    registry_version: v2026.10.13.002
+    seq: 6
+  - entry_hash: 0c0502d05feb074142f9c1fb7bcc1957def0bebd4fe76c93b68a57380a1f1a3d
+    gap:
+      classification: isolation_egress
+      content: worker 具备 TCP 外联能力；阶段 A 仅 selfcheck 探测标记 OPEN/BLOCKED，不阻断
+      doc_ref: docs/sandbox_isolation.md §1/§5.4
+      fixable: true
+      id: GAP-007
+      needs_lw: false
+      note: 同用户进程级隔离无法阻断网络访问；阶段 A 诚实标记，阶段 B 容器收口
+      ordinal: 7
+      phase_target: B
+      registered: '2026-10-13'
+      remediation: 容器 --network=none + 断言测试：worker 内 socket 连外网必失败
+      status: OPEN
+      threat_ref: T2
+      title: 房间外联未阻断（egress 仅标记）
+    prev_hash: 5c9a553578535ac5ccd16623400748e0ac04c3398f4d93f343d140131d2ca2ed
+    registry_version: v2026.10.13.002
+    seq: 7
+  - entry_hash: 267ebde96725628f2caaba0d07ed505d29c294e5dd18b84e8c1f4431e74277e6
+    gap:
+      classification: isolation_resource
+      content: worker 死循环 / 内存膨胀可拖垮宿主；阶段 A 仅有 collect timeout
+      doc_ref: docs/sandbox_isolation.md §1/§5.4
+      fixable: true
+      id: GAP-008
+      needs_lw: false
+      note: timeout 只保证 controller 不无限等待，不限制 worker 实际资源占用
+      ordinal: 8
+      phase_target: B
+      registered: '2026-10-13'
+      remediation: 容器 --pids-limit=64 --memory=512m --cpus=1；进程级配额暂缺
+      status: OPEN
+      threat_ref: T5
+      title: 房间资源配额缺失
+    prev_hash: 0c0502d05feb074142f9c1fb7bcc1957def0bebd4fe76c93b68a57380a1f1a3d
+    registry_version: v2026.10.13.002
+    seq: 8
+  hard_wall_meta:
+    can_be_proved: false
+    created: '2026-09-30'
+    id: AXIOM-001
+    last_reviewed: '2026-10-13'
+    name: SchanuelAt
+    proof_barrier: 需要 Schanuel 猜想的完整证明（LW 级结果无法替代）
+    quarterly_review_due: '2027-01-13'
+    related_gap: GAP-001
+    review_action_if_unproved: CONFIRM_BARRIER
+    reviewer: human_001
+    source: Schanuel 猜想（未证明）
+    truth_status: HYPOTHESIS
+    type: 外部猜想公理
+    used_in: Specimen-002/proof.lean; GT001_m3 链条（lean_game_theory）
+    whitelist_entry: math_attack_rules.yaml axiom_whitelist.known_domain
+  registry_sha256: a7a7559bd843b5e365d1a9277af06c56ab4f46c5af07de776abda28345727a01
+  registry_version: v2026.10.13.002
+  source_docs:
+  - projects/emf/docs/M6-04_缺口456分析.md
+  - projects/emf/docs/M5-b_接口调研.md
+  - projects/emf/docs/trdeg_API_调用指南.md
+  - P19-engine/docs/sandbox_isolation.md
+  statistics:
+    open_barrier: 1
+    open_engineering: 2
+    resolved: 2
+    solvable: 3
+    total: 8
+  tail_hash: 267ebde96725628f2caaba0d07ed505d29c294e5dd18b84e8c1f4431e74277e6

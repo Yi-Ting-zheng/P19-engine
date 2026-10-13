@@ -1,0 +1,55 @@
+specimen:
+  id: "Specimen-003"
+  type: "cancelled"
+  name: "M5-b Lindemann-Weierstrass 蓝图（放弃标本）"
+  created: "2026-10-13"
+  description: >
+    被动放弃标本：M6-04 分析确认缺口2-6 已有 Mathlib 现成解，
+    LW 蓝图失去必要性。标记 CANCELLED + 复活条件，不计入真值统计。
+    四房间一致 CANCELLED，台账记录放弃条目。
+
+  artifact:
+    proof: null
+    plan: "plan.md"
+
+  machine:
+    build_exit_code: null
+    sorry_count: 0
+    axioms: []
+
+  claims:
+    truth_grade_requested: "CANCELLED"
+    truth_grade_basis: "alternative_superseded"
+    hard_wall: null
+    statement: "放弃 M5-b LW 蓝图：缺口2-6 已由 Mathlib 现成结果覆盖，替代路径为 trdeg API。"
+
+  cancelled:
+    reason: "M6-04 证明缺口2-6全部有 Mathlib 现成解，无需 LW"
+    evidence: "projects/emf/docs/M6-04_缺口456分析.md"
+    alternative: "projects/emf/docs/trdeg_API_调用指南.md"
+    reversible: true
+    reconsider_when: "缺口1（SchanuelAt 桥接）被攻克，需要 LW 级结果"
+
+  audit_facts:
+    build_exit_code: null
+    proof_summary_missing: false
+    summary_incomplete: false
+    formal_syntax_passed: false
+    truth_grade_requested: "CANCELLED"
+    truth_grade_basis: "alternative_superseded"
+    external_artifact_scanned: false
+    new_axioms_not_in_whitelist: false
+    failure_disclosure_ratio: 1.0
+    axiom_set_changed: false
+
+  expect:
+    verdict: "CANCELLED"
+    state: "DONE"
+    votes:
+      F: "CANCELLED"
+      N: "CANCELLED"
+      S: "CANCELLED"
+      A: "CANCELLED"
+    rule_hits: []
+    hard_wall: null
+    ledger_truth_status: "CANCELLED"

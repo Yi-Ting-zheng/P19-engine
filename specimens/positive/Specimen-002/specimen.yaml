@@ -1,0 +1,53 @@
+specimen:
+  id: "Specimen-002"
+  type: "positive"
+  name: "π^π 超越性证明（条件于 SchanuelAt 硬墙）"
+  created: "2026-10-13"
+  description: >
+    阳性诚实标本：声明编译通过（EXIT=0）、sorry=0，
+    公理依赖含 SchanuelAt（whitelist known_domain，HYPOTHESIS 层硬墙 GAP-001）。
+    以 formal_syntax_only 依据请求 THEOREM → EV-TRUTH-GRADE 强制 DOWNGRADE，
+    四房间一致 THEOREM-COND，台账记录硬墙 GAP-001。
+
+  artifact:
+    proof: "proof.lean"
+
+  machine:
+    build_exit_code: 0
+    sorry_count: 0
+    axioms: ["propext", "Classical.choice", "Quot.sound", "SchanuelAt"]
+
+  claims:
+    truth_grade_requested: "THEOREM"
+    truth_grade_basis: "formal_syntax_only"
+    hard_wall: "GAP-001"
+    statement: "在 SchanuelAt 公理下，数值实验与编译核验一致（EXIT=0，sorry=0），请求升格 THEOREM。"
+
+  numeric_probe:
+    series: "pi_pow_pi"
+    claimed: 36.462159607
+    tolerance: 1.0e-6
+
+  audit_facts:
+    build_exit_code: 0
+    proof_summary_missing: true
+    summary_incomplete: true
+    formal_syntax_passed: true
+    truth_grade_requested: "THEOREM"
+    truth_grade_basis: "formal_syntax_only"
+    external_artifact_scanned: false
+    new_axioms_not_in_whitelist: false
+    failure_disclosure_ratio: 1.0
+    axiom_set_changed: false
+
+  expect:
+    verdict: "THEOREM-COND"
+    state: "DONE"
+    votes:
+      F: "THEOREM-COND"
+      N: "THEOREM-COND"
+      S: "THEOREM-COND"
+      A: "THEOREM-COND"
+    rule_hits: ["MA-006", "MA-006b", "EV-TRUTH-GRADE"]
+    hard_wall: "GAP-001"
+    ledger_truth_status: "THEOREM-COND"

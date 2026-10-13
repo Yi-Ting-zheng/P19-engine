@@ -1,0 +1,53 @@
+specimen:
+  id: "Specimen-001"
+  type: "negative"
+  name: "符号错误标本（编译失败 + 违禁升格话术）"
+  created: "2026-10-13"
+  description: >
+    阴性压力测试标本：声明 Lean 编译失败（EXIT=1）且带 sorry，
+    同时以「多次独立一致 → THEOREM」违禁话术请求升格。
+    四房间应一致 REJECT，台账红绿并存记录 REJECT 条目。
+
+  artifact:
+    proof: "proof.lean"
+
+  machine:
+    build_exit_code: 1
+    sorry_count: 1
+    axioms: []
+
+  claims:
+    truth_grade_requested: "THEOREM"
+    truth_grade_basis: "formal_syntax_only"
+    hard_wall: null
+    statement: "IF 分片多次独立一致 THEN 升格为 THEOREM"
+
+  numeric_probe:
+    series: "basel"
+    terms: 20000
+    claimed: 1.65
+    tolerance: 1.0e-6
+
+  audit_facts:
+    build_exit_code: 1
+    proof_summary_missing: false
+    summary_incomplete: false
+    formal_syntax_passed: false
+    truth_grade_requested: "THEOREM"
+    truth_grade_basis: "formal_syntax_only"
+    external_artifact_scanned: false
+    new_axioms_not_in_whitelist: false
+    failure_disclosure_ratio: 1.0
+    axiom_set_changed: false
+
+  expect:
+    verdict: "REJECT"
+    state: "DONE"
+    votes:
+      F: "REJECT"
+      N: "REJECT"
+      S: "REJECT"
+      A: "REJECT"
+    rule_hits: []
+    hard_wall: null
+    ledger_truth_status: "REJECT"

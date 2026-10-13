@@ -1,0 +1,32 @@
+index:
+  version: "v2026.10.13.001"
+  total: 4
+  specimens:
+    - id: "Specimen-001"
+      type: "negative"
+      path: "negative/Specimen-001"
+      truth_status: "REJECT"
+      hash: "sha256:PENDING"          # 由 tools/export_gap_ledger.py / ledger 追加时填充
+    - id: "Specimen-002"
+      type: "positive"
+      path: "positive/Specimen-002"
+      truth_status: "THEOREM-COND"
+      hard_wall: "GAP-001"
+      hash: "sha256:PENDING"
+    - id: "Specimen-003"
+      type: "cancelled"
+      path: "cancelled/Specimen-003"
+      truth_status: "CANCELLED"
+      hash: "sha256:PENDING"
+    - id: "Specimen-004"
+      type: "external_corpus"
+      path: "external_corpus/Specimen-004"
+      truth_status: "EMPIRICAL"
+      conditional_on: "UCP"
+      hash: "sha256:PENDING"
+  statistics:
+    negative: 1
+    positive: 1
+    cancelled: 1
+    external_corpus: 1
+  append_only: true

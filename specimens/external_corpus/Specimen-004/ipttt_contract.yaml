@@ -1,0 +1,141 @@
+# ============================================================
+# IPTTT 契约 — Family003 证明流程（Specimen-004）
+# 本体: IPTTT 预印本 v1.0 — I 身份/意图 · P 过程自观测 · T 触发 · T 任务 · T 终止
+# 对齐: projects/emf/docs/数学攻略实验台_design_v0.1.md §1 五层映射
+# 轮换: 每阶段绑定独立上下文窗口 W1..W5（docs/audit_windows.md）
+# ============================================================
+
+meta:
+  contract_id: "IPTTT-F003-001"
+  specimen_id: "Specimen-004"
+  family: "Family003"
+  conjecture: "准黎曼假设"
+  artifact: "003-sublemma-beta_le_seven_eighths"
+  schema_version: "1.0"
+  created: "2026-10-13"
+  append_only: true
+
+# ------------------------------------------------------------
+# 五阶段：意图 → 过程 → 触发 → 任务 → 终止
+# 每阶段 = 一个独立窗口（轮换调度），跨窗口仅传结构化引理（ID+陈述+哈希）
+# ------------------------------------------------------------
+stages:
+
+  - id: "I-INTENT"
+    ipttt_layer: "I 身份/意图"
+    window: "W1"                                     # 与定义合并入同一窗口（见 audit_windows.md）
+    intent: "验证 β ≤ 7/8：零点实部上确界 β 越过 7/8 导出矛盾"
+    identity_anchor:
+      proposition: "beta ≤ 7/8"
+      lean_decl: "OAI.SevenEighths.HeckeCommonProbe.beta_le_seven_eighths"
+      truth_grade_track: "EMPIRICAL（定理复述，终生不改；升级仅走严格前提绑定+严格证明链）"
+    inputs:
+      - "Z = {x ∈ ℝ | ∃χ,s: L(s,χ)=0 ∧ Re s=x}（排除主特征极点）"
+      - "S = {1/2} ∪ Z,  β := sup S"
+    outputs:
+      - lemma: "L0-single-side"
+        statement: "β < Re s ∧ (s≠1 ∨ χ.residue≠1) ⟹ L(s,χ) ≠ 0"
+        anchor: "ZeroSupremum.lean:48"
+
+  - id: "P-PROCESS"
+    ipttt_layer: "P 过程自观测"
+    window: "W3"                                     # 反证主干 = 过程观测带
+    process: "引理分步校验（Step 1–5），每步产出可哈希中间引理"
+    steps:
+      - id: "Step1"
+        name: "延拓余量 mg"
+        statement: "mg := min(β−7/8−ω, σ) > 0；7/8 < β − mg"
+        anchor: "Supremum.lean:10"
+        emits: ["lemma-mg-pos", "boundary_gt"]
+      - id: "Step2"
+        name: "β 附近的本原零点"
+        statement: "β−mg < Re ρ ≤ 1，Primitive(η)，L(ρ,η)=0"
+        anchor: "PrimitiveSupremum.lean:46"
+        emits: ["lemma-near-zero"]
+      - id: "Step3"
+        name: "压缩到平凡 χ"
+        statement: "掩码 M ⟹ L(ρ,χ) = L(ρ,η)·factors = 0"
+        anchor: "CommonProbe.lean:34 / FiniteDeletion.lean:126"
+        emits: ["lemma-zero-preserved"]
+      - id: "Step4"
+        name: "探针非零引理（矛盾点）"
+        statement: "nonzero_of_probe_bounds(c=−11/16) ⟹ L(ρ,χ) ≠ 0"
+        anchor: "SignalIdentity.lean:103"
+        emits: ["lemma-probe-nonzero"]
+      - id: "Step5"
+        name: "矛盾"
+        statement: "Step3 ⟹ L=0 与 Step4 ⟹ L≠0 矛盾；反设 7/8<β 不成立"
+        emits: ["lemma-contradiction"]
+    cross_window_handoff:                            # 元控制器只传引理，不传窗口原文
+      from: ["W1", "W2", "W4"]
+      payload: "lemma_id + statement + sha256"
+      forbidden: "窗口间传递全文上下文（防压缩失真与共偏误）"
+
+  - id: "T-TRIGGER"
+    ipttt_layer: "T 触发"
+    window: "W2"
+    trigger: "UCP 假设核验 — 可判定前置条件，非自由假设"
+    predicate:
+      UCP: "7/8 < β ⟹ ∃ω σ, 0<ω ∧ ω<β−7/8 ∧ 0<σ ∧ PrimitiveContract ω σ"
+      construction: "认证机器对每个 β>7/8 构造（FinalAssemblyChosenData.lean:57，取 ω=(β−7/8)/2、σ=D.sigma）"
+      sub_conditions:
+        - "(M) 掩码: coeff_χ = [IsCoprime(I, modχ)] · coeff_η"
+        - "(A1) H 在 {Re s > 7/8} 解析 且 ‖H s − 1‖ ≤ 1/2"
+        - "(A2) J(x) = O(x^(3/16+ω))"
+        - "(A3) J(x) − signal_{χ,H}(x) = O(x^(β−11/16−σ))"
+      decidable: "有限样本可计算（O-记号常数、解析半平面、范数界均可判定核验）"
+      applies_only_if: "UCP ⇒ β≤7/8（适用域严格限定，见 specimen.yaml truth.conditional_note）"
+    on_false: "CANCEL_STAGE（UCP 不成立时反证链不启动，禁止断言结论）"
+    on_true: "dispatch_task"
+
+  - id: "T-TASK"
+    ipttt_layer: "T 任务"
+    window: "W4"                                     # Mellin 延拓机制核验
+    task: "机器核验任务"
+    operations:
+      - op: "lean_compile"
+        target: "OAI.SevenEighths.HeckeCommonProbe.beta_le_seven_eighths"
+        source: "CommonProbe.lean:27"
+        expected_exit: 0
+        status: "PENDING_BUILD"                      # 本机无 .lake；构建后回填 exit_code
+      - op: "mellin_mechanism_check"                 # Step4 内部机制（§4）
+        target: "Continuation.lean:37,92,130"
+        checks:
+          - "signal 主项吸收: f = O(x^(a+c)), a := β−mg, M(s) 在 {Re s>a} 解析"
+          - "解析恒等式: RegL_χ(s)·M(s) = R_χ(s)·e^((s−5/6)^2)·H(s)（连通半平面唯一延拓）"
+          - "ρ 处代入: 左=0 ⇔ 右≠0 矛盾（R_χ(ρ)≠0 ∧ e≠0 ∧ H(ρ)≠0）"
+      - op: "axiom_scan"
+        level: "declaration"
+        scope: "math-main/lean/OAI/NumberTheory/DirichletL"
+        result: {files: 2926, axioms: 0, sorry: 0, verdict: "CLEAN"}
+    depends_on: ["T-TRIGGER"]
+
+  - id: "T-TERMINATE"
+    ipttt_layer: "T 终止"
+    window: "W5"
+    terminate_conditions:
+      - on: "lemma-contradiction ∧ lean_compile.EXIT=0 ∧ axiom_scan.CLEAN"
+        then: "PROOF_COMPLETE"
+        conclusion: "β ≤ 7/8 ⇒ Re s > 7/8 无零点（§5 认证链 → zeta_nonzero）"
+      - on: "any_step_failed ∨ trigger_false"
+        then: "ABORT_AND_ARCHIVE"
+    protocol: "终止即封档：写入真值台账（SHA256 哈希链），快照非销毁（V∞ 禁终止语义）"
+    ledger_entry:
+      specimen_id: "Specimen-004"
+      truth_grade: "EMPIRICAL"
+      basis: "restatement_of_machine_verified_lean"
+      conditional_on: "UCP"
+      hard_wall: null
+      gaps: []
+
+# ------------------------------------------------------------
+# 矛盾链骨架（W5 终局窗接收的结构化引理序列）
+# ------------------------------------------------------------
+skeleton:
+  chain:
+    - "detector_certified_bands : DetectorCertifiedBands（掩码/能量/矩估计认证计算）"
+    - "→ fine_moments_of_certified → chosen_moments_of_certified（HighData D, κ_plain=3/4+2Δ）"
+    - "→ common_probe_of_chosen_moments（FinalAssemblyChosenData.lean:57）⟹ UniformCommonProbe"
+    - "→ beta_le_seven_eighths（反证）⟹ β ≤ 7/8"
+    - "→ L0 ⟹ hecke_ne_zero / dirichlet_nonzero / zeta_nonzero（Dirichlet.lean:158,171）"
+  one_liner: "反设 β>7/8 ⟹ 压缩机器产出压缩零点(Step3) ⟹ 探针强制同一 ρ 非零(Step4) ⟹ 矛盾 ⟹ β≤7/8"

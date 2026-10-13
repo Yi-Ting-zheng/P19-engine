@@ -1,0 +1,8 @@
+# 运行时产物（可由 run_p0 重新生成）
+runs/
+
+# Python 缓存
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
